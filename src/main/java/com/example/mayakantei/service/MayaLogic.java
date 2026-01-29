@@ -4,8 +4,7 @@ import java.time.LocalDate;
 
 public class MayaLogic {
 
-    private static final LocalDate BASE_DATE = LocalDate.of(1987, 7, 26);
-    private static final int BASE_KIN = 34;
+    private static final LocalDate BASE_DATE = LocalDate.of(2025, 9, 17);
 
     private static final String[] SOLAR_SEALS = {
             "赤い龍", "白い風", "青い夜", "黄色い種",
@@ -22,33 +21,29 @@ public class MayaLogic {
     };
 
     public String calculateKin(LocalDate date) {
-        long daysDiff = java.time.temporal.ChronoUnit.DAYS.between(BASE_DATE, date);
+        int kin = calculateKinNumber(date);
 
-        // Java % operator can return negative values for negative operands, so we
-        // handle that.
-        long kinVal = (BASE_KIN + daysDiff) % 260;
-
-        if (kinVal <= 0) {
-            kinVal += 260;
-        }
-
-        int kin = (int) kinVal;
         int solarSealIndex = (kin - 1) % 20;
         int galacticToneIndex = (kin - 1) % 13;
 
         String solarSeal = SOLAR_SEALS[solarSealIndex];
         String galacticTone = GALACTIC_TONES[galacticToneIndex];
 
-        return String.format("KIN%d%s %s", kin, solarSeal, galacticTone);
+        return String.format("KIN%d %s %s", kin, solarSeal, galacticTone);
     }
 
     // Helper to get int Kin
+    // Logic: (TargetDate - 2025/09/17) mod 260 + 1
     public int calculateKinNumber(LocalDate date) {
         long daysDiff = java.time.temporal.ChronoUnit.DAYS.between(BASE_DATE, date);
-        long kinVal = (BASE_KIN + daysDiff) % 260;
-        if (kinVal <= 0)
+        long kinVal = daysDiff % 260;
+
+        if (kinVal < 0) {
             kinVal += 260;
-        return (int) kinVal;
+        }
+
+        // Add 1 because KIN starts at 1, and 2025/09/17 is KIN 1 (0 diff => KIN 1)
+        return (int) kinVal + 1;
     }
 
     // Helper to get Seal Name
