@@ -1,0 +1,17 @@
+# Exported from Render on 2026-01-26T07:09:41Z
+version: "1"
+projects:
+- name: My project
+  environments:
+  - name: Production
+    services:
+    - type: web
+      name: maya-kantei
+      runtime: docker
+      repo: https://github.com/saespiritual88-ops/maya-kantei
+      plan: free
+      region: virginia
+      dockerContext: .
+      dockerfilePath: ./Dockerfile
+      healthCheckPath: /
+      autoDeployTrigger: commit
